@@ -1,6 +1,6 @@
-import { model, modelID } from "@/ai/providers";
+import { model, type modelID } from "@/ai/providers";
 import { weatherTool } from "@/ai/tools";
-import { streamText, UIMessage } from "ai";
+import { convertToModelMessages, stepCountIs, streamText, UIMessage } from "ai";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -14,13 +14,26 @@ export async function POST(req: Request) {
   const result = streamText({
     model: model.languageModel(selectedModel),
     system: "You are a helpful assistant.",
-    messages,
+    messages: convertToModelMessages(messages),
+    stopWhen: stepCountIs(5),
     tools: {
       getWeather: weatherTool,
     },
+    experimental_telemetry: {
+      isEnabled: false,
+    },
   });
 
-  return result.toDataStreamResponse({
+  return result.toUIMessageStreamResponse({
     sendReasoning: true,
+    onError: (error) => {
+      if (error instanceof Error) {
+        if (error.message.includes("Rate limit")) {
+          return "Rate limit exceeded. Please try again later.";
+        }
+      }
+      console.error(error);
+      return "An error occurred.";
+    },
   });
 }
