@@ -1,4 +1,4 @@
-import type { Message as TMessage } from "ai";
+import type { UIMessage } from "ai";
 import { Message } from "./message";
 import { useScrollToBottom } from "@/lib/hooks/use-scroll-to-bottom";
 
@@ -7,17 +7,17 @@ export const Messages = ({
   isLoading,
   status,
 }: {
-  messages: TMessage[];
+  messages: UIMessage[];
   isLoading: boolean;
   status: "error" | "submitted" | "streaming" | "ready";
 }) => {
   const [containerRef, endRef] = useScrollToBottom();
   return (
     <div
-      className="flex-1 h-full space-y-4 overflow-y-auto py-8"
+      className="overflow-y-auto flex-1 py-8 space-y-4 h-full"
       ref={containerRef}
     >
-      <div className="max-w-xl mx-auto pt-8">
+      <div className="pt-8 mx-auto max-w-xl">
         {messages.map((m, i) => (
           <Message
             key={i}
