@@ -7,7 +7,7 @@ import {
 } from "@ai-sdk/provider";
 import {
   UnsupportedFunctionalityError,
-} from "@ai-sdk/provider-utils";
+} from "@ai-sdk/provider";
 
 export class CustomChatLanguageModel implements LanguageModelV2 {
   readonly specificationVersion = "v2";
