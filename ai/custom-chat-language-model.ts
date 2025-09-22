@@ -7,7 +7,7 @@ import {
 } from "@ai-sdk/provider";
 import {
   UnsupportedFunctionalityError,
-} from "@ai-sdk/provider";
+} from "@ai-sdk/provider-utils";
 
 export class CustomChatLanguageModel implements LanguageModelV2 {
   readonly specificationVersion = "v2";
@@ -28,6 +28,7 @@ export class CustomChatLanguageModel implements LanguageModelV2 {
     usage: {
       inputTokens: number;
       outputTokens: number;
+      totalTokens: number;
     };
     warnings: string[];
   }> {
@@ -52,6 +53,7 @@ export class CustomChatLanguageModel implements LanguageModelV2 {
       usage: {
         inputTokens: data.usage?.prompt_tokens ?? 0,
         outputTokens: data.usage?.completion_tokens ?? 0,
+        totalTokens: data.usage?.total_tokens ?? (data.usage?.prompt_tokens ?? 0) + (data.usage?.completion_tokens ?? 0),
       },
       warnings: [],
     };
