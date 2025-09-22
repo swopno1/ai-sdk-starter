@@ -1,6 +1,7 @@
 import {
   LanguageModelV2,
   LanguageModelV2CallOptions,
+  LanguageModelV2CallWarning,
   LanguageModelV2Content,
   LanguageModelV2Prompt,
   LanguageModelV2StreamPart,
@@ -30,7 +31,7 @@ export class CustomChatLanguageModel implements LanguageModelV2 {
       outputTokens: number;
       totalTokens: number;
     };
-    warnings: string[];
+    warnings: LanguageModelV2CallWarning[];
   }> {
     const { messages } = this.convertToProviderMessages(options.prompt);
 
