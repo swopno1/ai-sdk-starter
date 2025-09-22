@@ -69,4 +69,8 @@ export class CustomChatLanguageModel implements LanguageModelV2 {
       functionality: "doStream",
     });
   }
+
+  get supportedUrls(): Record<string, RegExp[]> {
+    return {};
+  }
 }
