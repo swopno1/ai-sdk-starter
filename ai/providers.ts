@@ -4,43 +4,10 @@ import {
   extractReasoningMiddleware,
   wrapLanguageModel,
 } from "ai";
-
-const localLlamaProvider = wrapLanguageModel({
-  middleware: extractReasoningMiddleware({
-    tagName: "think",
-  }),
-  // Directly provide the chat function here, not via customProvider
-  model: {
-    async chat({
-      messages,
-      temperature,
-      maxTokens,
-    }: {
-      messages: Array<{ role: string; content: string }>;
-      temperature: number;
-      maxTokens: number;
-    }) {
-      const response = await fetch(
-        "http://localhost:8000/v1/chat/completions",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            model: "local-llama",
-            messages,
-            temperature,
-            max_tokens: maxTokens,
-          }),
-        }
-      );
-      const data = await response.json();
-      return { content: data.choices[0].message.content };
-    },
-  },
-});
+import { CustomChatLanguageModel } from "./custom-chat-language-model";
 
 const languageModels = {
-  "local-llama": localLlamaProvider,
+  "local-llama": new CustomChatLanguageModel("local-llama"),
   "meta-llama/Llama-3.3-70B-Instruct-Turbo": wrapLanguageModel({
     middleware: extractReasoningMiddleware({
       tagName: "think",
