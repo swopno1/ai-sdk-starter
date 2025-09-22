@@ -2,7 +2,7 @@ import { model, type modelID } from "@/ai/providers";
 import { weatherTool } from "@/ai/tools";
 import { generateText } from "ai";
 import { convertToModelMessages, UIMessage } from "ai";
-import { JSONResponse } from "ai/rsc";
+import { NextResponse } from "next/server";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -19,7 +19,5 @@ export async function POST(req: Request) {
     messages: convertToModelMessages(messages),
   });
 
-  return new JSONResponse(result, {
-    status: 200,
-  });
+  return NextResponse.json(result);
 }
