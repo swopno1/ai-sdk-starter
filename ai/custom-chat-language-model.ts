@@ -50,11 +50,11 @@ export class CustomChatLanguageModel implements LanguageModelV2 {
 
     return {
       content: [{ type: "text", text: data.choices[0].message.content }],
-      finishReason: "stop", // Assuming stop, as local model may not provide this
+      finishReason: data.choices[0].finish_reason,
       usage: {
-        inputTokens: data.usage?.prompt_tokens ?? 0,
-        outputTokens: data.usage?.completion_tokens ?? 0,
-        totalTokens: data.usage?.total_tokens ?? (data.usage?.prompt_tokens ?? 0) + (data.usage?.completion_tokens ?? 0),
+        inputTokens: data.usage.prompt_tokens,
+        outputTokens: data.usage.completion_tokens,
+        totalTokens: data.usage.total_tokens,
       },
       warnings: [],
     };
