@@ -7,10 +7,10 @@ import {
 } from "@ai-sdk/provider";
 import {
   UnsupportedFunctionalityError,
-} from "@ai-sdk/provider-utils";
+} from "@ai-sdk/provider";
 
 export class CustomChatLanguageModel implements LanguageModelV2 {
-  readonly specificationVersion = "V2";
+  readonly specificationVersion = "v2";
   readonly provider = "custom";
   readonly modelId: string;
 
@@ -24,6 +24,12 @@ export class CustomChatLanguageModel implements LanguageModelV2 {
     options: LanguageModelV2CallOptions,
   ): Promise<{
     content: LanguageModelV2Content[];
+    finishReason: "stop" | "tool-calls" | "error" | "other";
+    usage: {
+      inputTokens: number;
+      outputTokens: number;
+    };
+    warnings: string[];
   }> {
     const { messages } = this.convertToProviderMessages(options.prompt);
 
@@ -42,6 +48,12 @@ export class CustomChatLanguageModel implements LanguageModelV2 {
 
     return {
       content: [{ type: "text", text: data.choices[0].message.content }],
+      finishReason: "stop", // Assuming stop, as local model may not provide this
+      usage: {
+        inputTokens: data.usage?.prompt_tokens ?? 0,
+        outputTokens: data.usage?.completion_tokens ?? 0,
+      },
+      warnings: [],
     };
   }
 
